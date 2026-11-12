@@ -3,7 +3,6 @@ import SwiftUI
 
 struct SignInView: View {
     @Environment(SessionStore.self) private var session
-    @Environment(\.colorScheme) private var colorScheme
     @State private var email = ""
     @State private var password = ""
     @State private var isWorking = false
@@ -60,7 +59,7 @@ struct SignInView: View {
 
                     if GoogleAuth.isConfigured {
                         OrDivider()
-                        GoogleSignInButton(scheme: colorScheme == .dark ? .light : .dark, style: .wide) {
+                        GoogleSignInButton(scheme: .light, style: .wide) {
                             Task { await signInWithGoogle() }
                         }
                         .disabled(isWorking)
