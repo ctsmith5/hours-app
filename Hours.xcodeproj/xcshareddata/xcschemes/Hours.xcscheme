@@ -63,6 +63,11 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
+            key = "HOURS_DEMO"
+            value = "1"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "API_BASE_URL"
             value = "http://localhost:5032"
             isEnabled = "NO">

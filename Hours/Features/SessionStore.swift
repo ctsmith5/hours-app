@@ -34,6 +34,15 @@ final class SessionStore {
         await loadMe()
     }
 
+    /// Returns false if the user closed Google's sheet without signing in.
+    @discardableResult
+    func signInWithGoogle() async throws -> Bool {
+        guard let idToken = try await GoogleAuth.idToken() else { return false }
+        try await client.signIn(googleIdToken: idToken)
+        await loadMe()
+        return true
+    }
+
     /// Always answers with the same message, whether or not the email already has an account.
     func register(email: String, password: String) async throws -> String {
         try await client.send(API.register(email: email.trimmingCharacters(in: .whitespaces), password: password)).message
@@ -49,6 +58,7 @@ final class SessionStore {
 
     func signOut() async {
         await client.signOut()
+        GoogleAuth.signOut()
         state = .signedOut
     }
 

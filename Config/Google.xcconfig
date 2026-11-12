@@ -1,0 +1,8 @@
+// Google Sign-In for iOS. These IDs ship inside the app binary, so they aren't secrets.
+// Create them in Google Cloud Console → APIs & Services → Credentials → OAuth client ID → iOS,
+// with bundle ID com.ctsmith5.hours. Leave both empty to hide the Google button.
+//
+// GOOGLE_IOS_CLIENT_ID:      1234567890-abc123.apps.googleusercontent.com
+// GOOGLE_REVERSED_CLIENT_ID: com.googleusercontent.apps.1234567890-abc123
+GOOGLE_IOS_CLIENT_ID =
+GOOGLE_REVERSED_CLIENT_ID =

@@ -23,6 +23,29 @@ open Hours.xcodeproj
 | `Hours/Features` | Session state, sign in / create account, and the day view. |
 | `HoursTests` | Swift Testing suites against a stubbed URL protocol. No test touches the real API. |
 
+## Design
+
+Classic barbershop: cream paper and charcoal ink, brass accents, a barber-pole
+stripe, and New York (the system serif) for headings. Colors are in
+`Assets.xcassets` with dark-mode variants; shared styles are in
+`Hours/App/Theme.swift`. The day view is an hour-by-hour timeline
+(`TimelineLayout` places overlapping bookings side by side).
+
+**Demo mode** (Debug builds only): enable `HOURS_DEMO` in the scheme's Run
+environment variables to use a fake API with a sample book. It starts signed in.
+
+## Google sign-in
+
+1. Google Cloud Console (project CONTROL) → APIs & Services → Credentials →
+   Create credentials → OAuth client ID → **iOS**, bundle ID `com.ctsmith5.hours`.
+2. Put the client ID and its reversed form ("iOS URL scheme" on the same page) in
+   `Config/Google.xcconfig`. They ship in the app, so they aren't secrets.
+3. Add the same client ID to `GOOGLE_CLIENT_IDS` in the API's
+   `deploy/cloudrun.env` (comma-separated with the web client ID), then run
+   `deploy/cloudrun.sh deploy`, so the API accepts tokens issued to the app.
+
+The Google button only appears once step 2 is done.
+
 ## API URL
 
 The app uses the deployed Cloud Run URL in `Hours/App/AppConfig.swift`. To point
@@ -36,7 +59,7 @@ xcodebuild test -project Hours.xcodeproj -scheme Hours -destination 'platform=iO
 
 ## Not done yet
 
-- Sign in with Google (needs the Google Sign-In SDK and an iOS OAuth client ID added to the API's `Google:ClientIds`).
+- App icon.
 - Opening email confirmation and reset links in the app (universal links); for now they open the web app.
 - Typed Booker models once real responses are checked.
 - Signing team and App Store setup.
