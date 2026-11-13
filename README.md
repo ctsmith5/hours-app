@@ -46,6 +46,25 @@ environment variables to use a fake API with a sample book. It starts signed in.
 
 The Google button only appears once step 2 is done.
 
+## TestFlight
+
+One-time setup:
+
+1. Xcode → Settings → Accounts: sign in with the Apple ID on team `2779EQ3QB6`.
+2. [App Store Connect](https://appstoreconnect.apple.com) → Apps → **+** → New App: platform iOS,
+   bundle ID `com.ctsmith5.hours` (if it isn't listed, register it under Certificates, Identifiers & Profiles → Identifiers),
+   SKU `hours-ios`. The name must be unique on the App Store.
+
+Each release (commit first; the build number is the commit count):
+
+```bash
+scripts/testflight.sh
+```
+
+Then in App Store Connect → TestFlight, add testers. People on your App Store Connect team can
+test as soon as the build finishes processing. Anyone else goes in an external group, which needs a
+one-time Beta App Review and the test information (feedback email, sign-in details for the reviewer).
+
 ## API URL
 
 The app uses the deployed Cloud Run URL in `Hours/App/AppConfig.swift`. To point
@@ -59,7 +78,6 @@ xcodebuild test -project Hours.xcodeproj -scheme Hours -destination 'platform=iO
 
 ## Not done yet
 
-- App icon.
 - Opening email confirmation and reset links in the app (universal links); for now they open the web app.
 - Typed Booker models once real responses are checked.
 - Signing team and App Store setup.
