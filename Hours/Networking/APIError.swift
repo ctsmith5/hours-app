@@ -36,6 +36,9 @@ extension APIError: LocalizedError {
             "You've been signed out. Sign in again."
         case let .http(status, problem):
             if status == 429 { "Too many attempts. Wait a minute and try again." }
+            // Our API always explains its errors. A bare 404 came from something in front of it
+            // (e.g. Cloud Run refusing outside traffic), so the request never reached the API.
+            else if status == 404, problem == Problem() { "Couldn't reach the server (404). It may not be open to the internet yet." }
             else if let fields = problem.errors, let first = fields.values.first?.first { first }
             else { problem.detail ?? problem.title ?? HTTPURLResponse.localizedString(forStatusCode: status).capitalized }
         case let .transport(message):

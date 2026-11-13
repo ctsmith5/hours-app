@@ -124,6 +124,21 @@ import Testing
         }
     }
 
+    @Test func aBare404MeansTheRequestNeverReachedTheAPI() async {
+        let client = StubURLProtocol.makeClient(tokens: InMemoryTokenStore()) { _, _ in
+            (404, json("<html><body>Error: Page not found</body></html>"))
+        }
+
+        await #expect { try await client.signIn(googleIdToken: "token") } throws: { error in
+            (error as? APIError)?.localizedDescription.hasPrefix("Couldn't reach the server (404)") == true
+        }
+    }
+
+    @Test func anAPI404KeepsItsOwnMessage() {
+        let error = APIError.http(status: 404, problem: Problem(title: "Appointment not found."))
+        #expect(error.localizedDescription == "Appointment not found.")
+    }
+
     @Test func validationErrorsShowTheFirstFieldMessage() {
         let error = APIError.http(status: 400, problem: Problem(title: "One or more validation errors occurred.",
                                                                 errors: ["email": ["Enter a valid email address."]]))
