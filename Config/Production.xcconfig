@@ -1,0 +1,6 @@
+// Debug and Release builds: the production API on Cloud Run (project CONTROL).
+#include "Google.xcconfig"
+
+// Host only: "//" starts a comment in .xcconfig files. Info.plist adds https://.
+API_HOST = booker-schedule-bridge-git-483738303584.us-east4.run.app
+HOURS_ENVIRONMENT = production

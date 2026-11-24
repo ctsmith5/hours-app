@@ -17,7 +17,10 @@ struct HoursApp: App {
         #if DEBUG
         if DemoServer.isEnabled { return DemoServer.makeClient() }
         #endif
-        return APIClient(baseURL: AppConfig.apiBaseURL, tokens: KeychainTokenStore())
+        // Each environment keeps its own session: staging and production tokens aren't interchangeable.
+        var tokens = KeychainTokenStore()
+        if AppConfig.environment != .production { tokens.service += ".\(AppConfig.environment.rawValue)" }
+        return APIClient(baseURL: AppConfig.apiBaseURL, tokens: tokens)
     }
 }
 
@@ -38,11 +41,28 @@ struct RootView: View {
             }
         }
         .animation(.easeInOut(duration: 0.25), value: session.state)
+        .safeAreaInset(edge: .top, spacing: 0) {
+            if AppConfig.environment == .staging { StagingBanner() }
+        }
         .task {
             // Unit tests run inside the app; don't let it call the real API.
             guard !AppConfig.isRunningTests else { return }
             await session.start()
         }
+    }
+}
+
+/// Marks staging builds on every screen so they're never mistaken for the real book.
+private struct StagingBanner: View {
+    var body: some View {
+        Text("Staging · Booker sandbox".uppercased())
+            .font(.system(size: 10, weight: .bold))
+            .tracking(1.6)
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 4)
+            .background(Theme.oxblood)
+            .accessibilityLabel("Staging build, using the Booker sandbox")
     }
 }
 

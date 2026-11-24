@@ -1,0 +1,7 @@
+// Staging builds: the staging API on Cloud Run (project control-staging-515314),
+// which talks to Booker's staging sandbox with writes on.
+#include "Google.xcconfig"
+
+// Host only: "//" starts a comment in .xcconfig files. Info.plist adds https://.
+API_HOST = schedule-bridge-staging-485592765917.us-east4.run.app
+HOURS_ENVIRONMENT = staging

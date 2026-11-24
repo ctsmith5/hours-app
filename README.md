@@ -58,17 +58,28 @@ One-time setup:
 Each release (commit first; the build number is the commit count):
 
 ```bash
-scripts/testflight.sh
+scripts/testflight.sh            # production
+scripts/testflight.sh --staging  # staging
 ```
 
 Then in App Store Connect → TestFlight, add testers. People on your App Store Connect team can
 test as soon as the build finishes processing. Anyone else goes in an external group, which needs a
 one-time Beta App Review and the test information (feedback email, sign-in details for the reviewer).
 
-## API URL
+## Environments
 
-The app uses the deployed Cloud Run URL in `Hours/App/AppConfig.swift`. To point
-it somewhere else, set `API_BASE_URL` in the scheme's Run environment variables.
+| Scheme / configuration | API | On the phone |
+|---|---|---|
+| `Hours` (Debug, Release) | production, `Config/Production.xcconfig` | "Hours" |
+| `Hours Staging` (Staging) | staging, `Config/Staging.xcconfig` (Booker's sandbox, writes on) | "Hours Staging", with a red STAGING band on every screen |
+
+The API host is set per configuration and baked into Info.plist, so it holds for TestFlight builds
+too. Staging and production keep separate sign-ins in the Keychain. To point a Debug run somewhere
+else (e.g. a local API), set `API_BASE_URL` in the scheme's Run environment variables.
+
+For TestFlight, `scripts/testflight.sh --staging` uploads a staging build to the same app. Build
+numbers are the commit count × 10 for production and × 10 + 1 for staging, so the odd builds in
+TestFlight are staging. Both use the same bundle ID, so a phone has one or the other installed.
 
 ## Tests
 
